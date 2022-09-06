@@ -1,5 +1,6 @@
 const categorySpace = document.getElementById("categories");
 const productSpace = document.getElementById("products");
+
 const mainURL = `https://bsale-backend-test1.herokuapp.com`;
 
 const fetchCategories = () => {
@@ -8,7 +9,6 @@ const fetchCategories = () => {
   promises.push(fetch(url).then((res) => res.json()));
 
   Promise.all(promises).then((results) => {
-    // console.log("results:", results);
     const categories = results[0].map((category) => ({
       id: category.id,
       name: category.name,
@@ -17,13 +17,13 @@ const fetchCategories = () => {
   });
 };
 
-const fetchProducts = () => {
+const fetchProducts = (newUrl) => {
   const promises = [];
-  const url = mainURL + `/products`;
+  let url = mainURL + `/products`;
+  if (newUrl != null) url = url + newUrl;
   promises.push(fetch(url).then((res) => res.json()));
 
   Promise.all(promises).then((results) => {
-    // console.log("results:", results);
     const products = results[0].map((product) => ({
       id: product.id,
       name: product.name,
@@ -41,8 +41,8 @@ const displayCategories = (categories) => {
   const categoriesHTMLString = categories
     .map(
       (category) =>
-        `<li class='category' id='${category.id}'>
-        <a href="${mainURL}/products?product_filter[category]=${category.id}">${category.name}</a>
+        `<li class='category' id='category${category.id}'>
+        <a href=''>${category.name}</a>
         </li>`
     )
     .join("");
@@ -61,6 +61,7 @@ const displayProducts = (products) => {
         ${productImage}
       <article>
       <p class='product-title'>${product.name.toUpperCase()}</p>
+      <p class='product-category'>${product.category}</p>
       <ul class='product-details'>
       <li><span>Precio:</span> S/ ${product.price}</li>
       <li><span>Descuento:</span> S/ ${product.discount}</li>
@@ -70,11 +71,34 @@ const displayProducts = (products) => {
     })
     .join("");
   productSpace.innerHTML = productsHTMLString;
+  categoryListener();
 };
 
 const App = () => {
   fetchCategories();
   fetchProducts();
+  orderingListener();
+};
+
+const categoryListener = () => {
+  const allCategories = document
+    .getElementById("categories")
+    .querySelectorAll("li");
+  allCategories.forEach((category) => {
+    category.addEventListener("click", (event) => {
+      event.preventDefault();
+      let categoryId = category.id.replace("category", "");
+      fetchProducts(`?product_filter[category]=${categoryId}`);
+    });
+  });
+};
+
+const orderingListener = () => {
+  const orderingSpace = document.getElementById("productFilterOrdering");
+  orderingSpace.addEventListener("change", (event) => {
+    event.preventDefault();
+    fetchProducts(`?product_filter[ordering]=${event.target.value}`);
+  });
 };
 
 App();
