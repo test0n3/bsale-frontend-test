@@ -62,6 +62,12 @@ aside ul a {
   border-bottom: solid 1px #cccccc;
 }
 
+.container nav form {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 #products {
   margin: 0;
   padding: 0;
