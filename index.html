@@ -9,12 +9,34 @@
   </head>
   <body>
     <header>
-      <h1><a href="#">BSale Store</a></h1>
+      <h1><a href="">BSale Store</a></h1>
     </header>
     <main>
       <aside><ul id="categories"></ul></aside>
       <section class="container">
-        <!-- <nav>nav bar for filtering and stuff</nav> -->
+        <nav>
+          <form id="productFilter" class="productForm" action="" method="get">
+            <section>
+              <input
+                id="productFilterTerms"
+                placeholder="ingresar nombre producto"
+                ,
+                type="text"
+                name="product_filter[terms]"
+              />
+            </section>
+            <section>
+              <label for="productFilterOrdering">Ordenar por:</label>
+              <select
+                id="productFilterOrdering"
+                name="product_filter[ordering]"
+              >
+                <option value="products.id_asc">Orden Ascendente</option>
+                <option value="products.id_desc">Orden Descendente</option>
+              </select>
+            </section>
+          </form>
+        </nav>
         <section class="products_space"><ul id="products"></ul></section>
       </section>
     </main>
