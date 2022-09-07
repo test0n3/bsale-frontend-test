@@ -1,6 +1,5 @@
 const categorySpace = document.getElementById("categories");
 const productSpace = document.getElementById("products");
-
 const mainURL = `https://bsale-backend-test1.herokuapp.com`;
 
 const fetchCategories = () => {
@@ -37,12 +36,14 @@ const fetchProducts = (newUrl) => {
 };
 
 const displayCategories = (categories) => {
-  console.log("displayCategories:", categories);
+  categories.unshift({ id: 0, name: "todos" });
   const categoriesHTMLString = categories
     .map(
       (category) =>
         `<li class='category' id='category${category.id}'>
-        <a href=''>${category.name}</a>
+        <a href=''>${
+          category.name[0].toUpperCase() + category.name.slice(1)
+        }</a>
         </li>`
     )
     .join("");
@@ -50,7 +51,6 @@ const displayCategories = (categories) => {
 };
 
 const displayProducts = (products) => {
-  console.log("displayProducts:", products);
   const productsHTMLString = products
     .map((product) => {
       const productImage =
@@ -74,12 +74,6 @@ const displayProducts = (products) => {
   categoryListener();
 };
 
-const App = () => {
-  fetchCategories();
-  fetchProducts();
-  orderingListener();
-};
-
 const categoryListener = () => {
   const allCategories = document
     .getElementById("categories")
@@ -88,7 +82,8 @@ const categoryListener = () => {
     category.addEventListener("click", (event) => {
       event.preventDefault();
       let categoryId = category.id.replace("category", "");
-      fetchProducts(`?product_filter[category]=${categoryId}`);
+      if (categoryId == "0") fetchProducts();
+      else fetchProducts(`?product_filter[category]=${categoryId}`);
     });
   });
 };
@@ -99,6 +94,25 @@ const orderingListener = () => {
     event.preventDefault();
     fetchProducts(`?product_filter[ordering]=${event.target.value}`);
   });
+};
+
+const searchListener = () => {
+  const productFilterTerms = document.getElementById("productFilterTerms");
+  productFilterTerms.addEventListener("keypress", (event) => {
+    if (event.key == "Enter") {
+      event.preventDefault();
+      console.log("productFilterTerms:", productFilterTerms.value);
+      fetchProducts(`?product_filter[terms]=${productFilterTerms.value}`);
+      productFilterTerms.value = "";
+    }
+  });
+};
+
+const App = () => {
+  fetchCategories();
+  fetchProducts();
+  orderingListener();
+  searchListener();
 };
 
 App();

@@ -60,9 +60,6 @@ aside ul a {
 .container nav {
   padding: 10px 5px;
   border-bottom: solid 1px #cccccc;
-}
-
-.container nav form {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
